@@ -1,0 +1,260 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Amanpulo - Ameneties & Activities</title>
+    <link href="../output.css" rel="stylesheet">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap"
+        rel="stylesheet">
+
+
+    <style>
+        body,
+        p,
+        a,
+        button {
+            font-family: 'Poppins', sans-serif;
+        }
+
+        @layer utilities {
+            ::-webkit-scrollbar {
+                width: 10px;
+            }
+
+            ::-webkit-scrollbar-track {
+                background: #f5e8dc;
+                border-radius: 10px;
+            }
+
+            ::-webkit-scrollbar-thumb {
+                background: #001F3F;
+                border-radius: 10px;
+                border: 2px solid #f5e8dc;
+            }
+
+            ::-webkit-scrollbar-thumb:hover {
+                background: #021b37;
+            }
+
+            .animate-fadeIn {
+                animation: fadeIn 1.5s ease-in-out forwards;
+                opacity: 0;
+            }
+
+            @keyframes fadeIn {
+                0% {
+                    opacity: 0;
+                    transform: translateY(20px);
+                }
+
+                100% {
+                    opacity: 1;
+                    transform: translateY(0);
+                }
+            }
+        }
+
+        
+    </style>
+</head>
+
+<body class="bg-[#0A192F]">
+    <main>
+        <!-- Background Image with Overlay -->
+        <div class="absolute inset-0">
+            <img src="../assets/images/AMANPULO_NATURE-8415.webp" alt="Amanpulo Resort Beach View"
+                class="w-full h-full object-cover brightness-110">
+            <div class="absolute inset-0 bg-gradient-to-b from-[#001F3F]/60 via-[#0A192F]/40 to-transparent"></div>
+        </div>
+
+        <!-- Navigation Bar -->
+        <nav class="fixed top-0 w-full flex items-center justify-between px-6 md:px-12 py-5 bg-[#0A192F]/50 backdrop-blur-md shadow-lg z-50">
+            <!-- Logo -->
+            <a href="index.html">
+                <img src="../assets/images/logo 1.webp" alt="Amanpulo Logo" class="w-24 h-auto">
+            </a>
+
+            <!-- Desktop Menu -->
+            <ul id="mobile-menu" class="hidden md:flex flex-col md:flex-row gap-6 md:gap-8 text-sm font-medium text-white 
+                absolute md:static top-16 left-0 w-full md:w-auto bg-[#0A192F]/90 md:bg-transparent 
+                p-6 md:p-0 shadow-lg md:shadow-none">
+                <li><a href="../index.html" class="hover:text-gray-300 transition">Home</a></li>
+                <li><a href="../activities.html" class=" hover:text-gray-300 transition">Overview</a></li>
+                <li><a href="../amenities-activities-f/Scuba.html" class=" text-blue-800 hover:text-gray-300 transition">Scuba Diving</a></li>
+                <li><a href="../amenities-activities-f/Kite-Surf.html" class="hover:text-gray-300 transition">Kite & Surf</a></li>
+                <li><a href="../amenities-activities-f/cruises.html" class="hover:text-gray-300 transition">Cruises</a></li>
+                <li><a href="../amenities-activities-f/gold-pearl.html" class="hover:text-gray-300 transition">Golden South Sea Pearl Journey
+                </a></li>
+                
+                <!-- Book Now (Only visible in mobile dropdown) -->
+                <li class="md:hidden mt-4">
+                    <a href="../booking.html" class="block text-center px-6 py-2 bg-blue-900 rounded-lg hover:bg-blue-700 transition">
+                        Book Now
+                    </a>
+                </li>
+            </ul>
+
+            <!-- "Book Now" Button (Visible Only on Desktop) -->
+            <a href="../booking.html"
+                class="hidden md:block px-6 py-2 text-white bg-[#001F3F] rounded-full shadow-lg hover:bg-[#0A192F] transition transform hover:scale-105">
+                Book Now
+            </a>
+
+            <!-- Mobile Menu Button -->
+            <button id="menu-btn" class="md:hidden text-white text-3xl focus:outline-none">
+                ☰
+            </button>
+        </nav>
+
+        <!-- Header Section -->
+        <header
+            class="relative flex flex-col items-center justify-center w-full h-screen bg-cover bg-center text-center text-white"
+            style="background-image: url('./assets/images/accommodation-banner.webp');">
+            <div class="bg-black/50 w-full h-full flex flex-col justify-center items-center px-6">
+                <h1 class="mt-4 text-6xl font-serif text-white drop-shadow-lg max-md:text-4xl">Scuba Diving
+                </h1>
+                <p class="mt-4 text-base max-w-3xl">With crystal clear, warm waters and unspoilt coral reefs, the sea surrounding Pamalican Island is a paradise for scuba divers of all levels. Visibility ranges from 20 to 30 metres (60 to 100 feet) and water temperatures from 26°C (79°F) to 30°C (86°F), ensuring possibly the clearest, most comfortable dives ever experienced. The region’s pristine coral reefs host an amazing array of marine life, 
+                    and almost every dive features a turtle or two cruising through a myriad tropical fish.</p>
+            </div>
+        </header>
+
+        <section class="bg-[#0A192F]">
+            <div class="gap-16 items-center py-8 px-4 mx-auto max-w-screen-xl lg:grid lg:grid-cols-2 lg:py-16 lg:px-6">
+                <div class="font-light text-gray-500 sm:text-lg dark:text-gray-400">
+                    <h2 class="mb-4 text-4xl tracking-tight font-bold text-gray-900 dark:text-white">PADI courses</h2>
+                    <p class="mb-4">Overseen by PADI dive pros, Amanpulo offers everything from Bubble Maker Experiences for young adventurers and PADI’s flagship Open Water course, to Enriched Air Nitrox and Specialty Courses (including night and deep dives) for advanced divers. The one-hour Scuba Refresher course is ideal for instilling confidence after a break, while the Five-Day 
+                        Programme is the perfect choice for certified divers wanting to maximise their time underwater during their stay. </p>
+                    
+                        <h2 class="mb-4 text-4xl tracking-tight font-bold text-gray-900 dark:text-white">Dive sites</h2>
+                        <p class="mb-4">With most sites less than 10 minutes away in the resort’s  custom-built speed boat, diving from Amanpulo is completely hassle-free, whether you’re diving with a group or your own personal dive master. Friendly batfish, sergeants, wrasses and parrotfish await amidst the hard and soft corals of the House Reef, while Rocky Cove is known for its large schools of jackfish, trevallies and fusiliers. Then there’s 
+                            The Pier, South Point, West Villa Reef and Casita 40, all with their own unique attractions. </p>
+                </div>
+                <div class="grid grid-cols-2 gap-4 mt-8">
+                    <img class="w-full rounded-lg" src="../assets/images/AMANPULO_DIVING-9965_0.webp" alt="office content 1">
+                    <img class="mt-4 w-full lg:mt-10 rounded-lg" src="../assets/images/AMANPULO_DIVING-9073.webp" alt="office content 2">
+                </div>
+            </div>
+        </section>
+
+        <div class="w-48 mx-auto border-t-2 border-white"></div>
+
+
+        <section class="bg-[#0A192F] py-16">
+            <div class="relative max-w-screen-xl mx-auto px-6 lg:px-12">
+                <div class="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
+                    <!-- Text Content -->
+                    <div>
+                        <p class="text-base font-semibold text-gray-300">Dive Centre</p>
+                        <h2 class="mt-2 text-4xl font-semibold text-gray-900 dark:text-white leading-tight">
+                            A Seamless Diving Experience
+                        </h2>
+                        <p class="mt-4 text-lg text-gray-700 dark:text-gray-400 mb-4">
+                            Discover the underwater world of Amanpulo with expert-led diving experiences. 
+                            Whether you are a beginner or a seasoned diver, we ensure a smooth and memorable experience.
+
+                            <p class="mt-4 text-lg text-gray-700 dark:text-gray-400">
+                            Positioned on the island’s north-western shoreline just back from the beach, 
+                            Amanpulo’s spacious, fully staffed Dive Centre offers a professional, safe, and welcoming environment in which to learn the ropes or relax with refreshments between dives. All equipment provided is of the highest quality.</p>
+                        </p>
+                    </div>
+                    <!-- Image -->
+                    <div class="flex justify-center">
+                        <img class="w-full max-w-lg rounded-xl shadow-xl" 
+                            src="../assets/images/AMANPULO_DIVING-8941.webp" 
+                            alt="Scuba Diving at Amanpulo">
+                    </div>
+                </div>
+            </div>
+        </section>
+        
+  
+    </main>
+    <footer class="bg-white">
+        <div class="mx-auto w-full max-w-screen-xl p-6 lg:py-10">
+            <div class="md:flex md:justify-between">
+                <!-- Logo Section -->
+                <div class="mb-6 md:mb-0 flex items-center">
+                    <a href="#" class="flex items-center">
+                        <img src="../assets/images/logo - dark.webp" class="h-10 me-3" alt="Amanpulo Logo" />
+                    </a>
+                </div>
+
+                <!-- Quick Links -->
+                <div class="grid grid-cols-2 gap-8 sm:gap-6 sm:grid-cols-3 p-6">
+                    <div>
+                        <h2 class="mb-4 text-sm font-semibold text-white uppercase">Quick Links</h2>
+                        <ul class="text-white dark:text-gray-400 font-medium space-y-2">
+                            <li><a href="../index.html" class="hover:text-white">Home</a></li>
+                            <li><a href="../accommodation.html" class="hover:text-white">Accommodations</a></li>
+                            <li><a href="../amenities-activities.html" class="hover:text-white">Ameneties & Activities</a></li>
+                            <li><a href="../booking.html" class="hover:text-white">Booking</a></li>
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- Contact Information -->
+                <div class="p-6">
+                    <h2 class="mb-4 text-sm font-semibold text-gray-900 uppercase">Contact Us</h2>
+                    <ul class="text-gray-600 dark:text-gray-400 font-medium space-y-2">
+                        <li>Pamalican Island, Cuyo Archipelago, Palawan, Philippines</li>
+                        <li>+63 2 7979 1777</li>
+                        <li>reservations@amanpulo.com</li>
+                    </ul>
+                </div>
+
+                <!-- Newsletter Subscription -->
+                <div class="p-6">
+                    <h2 class="mb-4 text-sm font-semibold text-gray-900 uppercase">Newsletter</h2>
+                    <p class="text-gray-600 dark:text-gray-400 font-medium">Subscribe to receive special offers and
+                        updates.</p>
+                    <form class="mt-4">
+                        <input type="email" placeholder="Enter your email"
+                            class="w-full p-2 rounded-lg border border-gray-300">
+                        <button type="submit"
+                            class="mt-2 px-4 py-2 bg-[#001F3F] text-white rounded-lg hover:bg-[#0A192F]">Subscribe</button>
+                    </form>
+                </div>
+            </div>
+
+            <!-- Divider -->
+            <hr class="my-6 border-gray-300 dark:border-gray-700 lg:my-8" />
+
+            <!-- Footer Bottom -->
+            <div class="sm:flex sm:items-center sm:justify-between">
+                <span class="text-sm text-gray-500 dark:text-gray-400">
+                    © 2025 Amanpulo. All rights reserved.
+                </span>
+                <div class="flex space-x-6">
+                    <a href="#" class="text-sm text-gray-500 dark:text-gray-400 hover:underline">Privacy Policy</a>
+                    <a href="#" class="text-sm text-gray-500 dark:text-gray-400 hover:underline">Terms of Service</a>
+                    <a href="#" class="text-sm text-gray-500 dark:text-gray-400 hover:underline">Sitemap</a>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        const menuBtn = document.getElementById("menu-btn");
+        const mobileMenu = document.getElementById("mobile-menu");
+    
+        // Toggle menu visibility
+        menuBtn.addEventListener("click", () => {
+            mobileMenu.classList.toggle("hidden");
+        });
+    
+        // Close menu when clicking a link
+        document.querySelectorAll("#mobile-menu a").forEach(link => {
+            link.addEventListener("click", () => {
+                mobileMenu.classList.add("hidden");
+            });
+        });
+    </script>
+    
+
+</body>
+
+</html>

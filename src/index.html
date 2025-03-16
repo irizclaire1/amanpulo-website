@@ -1,0 +1,710 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Amanpulo Resort | Homepage</title>
+    <link href="output.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.7.1/dist/leaflet.css" />
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+    href="https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap"
+    rel="stylesheet">
+    <script src="https://unpkg.com/leaflet@1.7.1/dist/leaflet.js"></script>
+    <style>
+        body,
+        p,
+        a,
+        button {
+          font-family: 'Poppins', sans-serif;
+        }
+    
+        .navbar {
+          position: fixed;
+          top: 0;
+          left: 0;
+          width: 100%;
+          z-index: 1000;
+          transition: background-color 0.3s ease-in-out;
+        }
+    
+        .navbar.scrolled {
+          background-color: #0A192F;
+          /* Change this to the desired background color */
+        }
+    
+        @layer utilities {
+          ::-webkit-scrollbar {
+            width: 10px;
+          }
+    
+          ::-webkit-scrollbar-track {
+            background: #f5e8dc;
+            border-radius: 10px;
+          }
+    
+          ::-webkit-scrollbar-thumb {
+            background: #001F3F;
+            border-radius: 10px;
+            border: 2px solid #f5e8dc;
+          }
+    
+          ::-webkit-scrollbar-thumb:hover {
+            background: #021b37;
+          }
+    
+          .animate-fadeIn {
+            animation: fadeIn 1.5s ease-in-out forwards;
+            opacity: 0;
+          }
+    
+          @keyframes fadeIn {
+            0% {
+              opacity: 0;
+              transform: translateY(20px);
+            }
+    
+            100% {
+              opacity: 1;
+              transform: translateY(0);
+            }
+          }
+        }
+      </style>
+</head>
+<body>
+    <!-- Hero Section -->
+  <header class="relative flex flex-col items-center justify-center w-full h-screen text-center">
+
+    <!-- Background Image with Overlay -->
+    <div class="absolute inset-0">
+      <img src="../src/assets/images/Amanpulo-Gallery-17.webp" alt="Amanpulo Resort Beach View"
+        class="w-full h-full object-cover brightness-75">
+      <div class="absolute inset-0 bg-gradient-to-b from-[#001F3F]/60 via-[#0A192F]/40 to-transparent"></div>
+    </div>
+
+    
+   <!-- Navigation Bar -->
+  <nav class="fixed top-0 w-full flex items-center justify-between px-6 md:px-12 py-5 bg-[#0A192F]/50 backdrop-blur-md shadow-lg z-50">
+    <!-- Logo -->
+    <a href="index.html">
+        <img src="./assets/images/logo 1.webp" alt="Amanpulo Logo" class="w-24 h-auto">
+    </a>
+
+    <!-- Desktop Menu -->
+    <ul class="hidden md:flex flex-col md:flex-row gap-6 md:gap-8 text-lg font-medium text-white 
+        absolute md:static top-16 left-0 w-full md:w-auto bg-[#0A192F]/90 md:bg-transparent 
+        p-6 md:p-0 shadow-lg md:shadow-none ml-22">
+        <li><a href="index.html" class="hover:text-gray-300 transition block py-2">Home</a></li>
+        <li><a href="accommodation.html" class="hover:text-gray-300 transition block py-2">Accommodation</a></li>
+        <li><a href="amenities-activities.html" class="hover:text-gray-300 transition block py-2">Amenities & Activities</a></li>
+        <li><a href="booking.html" class="hover:text-gray-300 transition block py-2">Booking</a></li>
+        <li><a href="#contact" class="hover:text-gray-300 transition block py-2">Contact</a></li>
+    </ul>
+
+    <!-- Mobile Menu -->
+    <ul id="mobile-menu" class="md:hidden hidden flex-col md:flex-row gap-6 md:gap-8 text-lg font-medium text-white 
+        absolute md:static top-16 left-0 w-full md:w-auto bg-[#0A192F]/90 md:bg-transparent 
+        p-6 md:p-0 shadow-lg md:shadow-none">
+        <li><a href="index.html" class="hover:text-gray-300 transition block py-2">Home</a></li>
+        <li><a href="accommodation.html" class="hover:text-gray-300 transition block py-2">Accommodation</a></li>
+        <li><a href="amenities-activities.html" class="hover:text-gray-300 transition block py-2">Amenities & Activities</a></li>
+        <li><a href="booking.html" class="hover:text-gray-300 transition block py-2">Booking</a></li>
+        <li><a href="#contact" class="hover:text-gray-300 transition block py-2">Contact</a></li>
+        
+        <!-- Book Now (Only visible in mobile dropdown) -->
+        <li class="md:hidden mt-4">
+            <a href="booking.html" class="block text-center px-6 py-2 bg-blue-900 rounded-lg hover:bg-blue-700 transition">
+                Book Now
+            </a>
+        </li>
+    </ul>
+
+    <!-- Flex container for Weather & Menu buttons -->
+    <div class="flex items-center gap-2 md:gap-4">
+        <!-- Weather Button -->
+        <div class="relative">
+            <button id="weather-btn" class="text-white text-xl p-2 rounded-full bg-[#001F3F] hover:bg-[#0A192F] transition">
+                🌤️
+            </button>
+
+            <!-- Weather Dropdown -->
+            <div id="weather-dropdown" class="hidden absolute right-0 mt-2 w-80 bg-white rounded-lg shadow-lg p-4 text-center">
+                <h2 class="text-base font-semibold">Current Weather at Amanpulo</h2>
+                <p id="weather-data" class="mt-2 text-gray-700">Loading...</p>
+            </div>
+        </div>
+
+        <!-- Book Now Button (Only for Desktop) -->
+        <a href="booking.html"
+            class="hidden md:block px-6 py-2 text-white bg-[#001F3F] rounded-full shadow-lg hover:bg-[#0A192F] transition transform hover:scale-105">
+            Book Now
+        </a>
+
+        <!-- Mobile Menu Button -->
+        <button id="menu-btn" class="md:hidden text-white text-3xl focus:outline-none">
+            ☰
+        </button>
+    </div>
+  </nav>
+
+
+    <!-- Hero Content -->
+    <section class="relative z-10 flex flex-col items-center max-w-2xl text-white">
+      <p class="text-lg uppercase tracking-wide text-gray-300 opacity-80">Palawan, The Philippines</p>
+      <!-- Weather Display -->
+      <p id="weather" class="mt-2 text-xl font-medium"></p>
+      <h1 class="mt-4 text-6xl font-serif text-white drop-shadow-lg max-md:text-4xl">
+        Escape to Amanpulo
+      </h1>
+      <p class="mt-4 text-lg opacity-90 max-w-xl">
+        A secluded island paradise where the deep blue sea meets untouched white sands. Indulge in a serene escape like
+        no other.
+      </p>
+      <a href="#main"
+        class="mt-6 px-8 py-3 text-lg font-semibold text-[#001F3F] bg-white rounded-full shadow-xl hover:bg-[#0A192F] hover:text-white transition transform hover:scale-105">
+        Discover More
+      </a>
+    </section>
+  </header>
+
+  <main id="main" class="flex overflow-hidden flex-col items-center pb-60 max-md:pb-24">
+        
+        <section class="bg-white py-20">
+            <div class="relative max-w-screen-xl mx-auto px-6 lg:px-12">
+                <div class="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
+                    <!-- Text Content -->
+                    <div>
+                        <p class="text-base font-semibold text-gray-600">Serene Luxury, Untouched Paradise.</p>
+                        <h2 class="mt-2 text-4xl font-serif font-normal text-gray-900 dark:text-gray-900 leading-tight">
+                            Amanpulo
+                        </h2>
+                        <p class="mt-4 text-lg text-gray-700 dark:text-gray-900 mb-4">Blissfully placed in the Cuyo Archipelago of northern Palawan in the
+                            Philippines, Amanpulo lies on the secluded Pamalican Island, fringed
+                            with white sand beaches and pristine reefs.</p>
+                        <p class="mt-4 text-lg text-gray-700 dark:text-gray-900 mb-4">
+                            Amanpulo provides the perfect opportunity for guests to take the entire resort as an exclusive venue for a special occasion of corporate retreat. Events that occupy our 42 Casitas and 18 Villas are considered full resort buyouts, 
+                            granting supreme privacy and island exclusivity. Buyouts are subject to availability.</p>
+
+                    </div>
+                    <!-- Image -->
+                    <div class="flex justify-center">
+                        <img class="w-full max-w-lg rounded-xl shadow-xl" 
+                            src="./assets/images/Amanpulo-Gallery-6.webp" 
+                            alt="Scuba Diving at Amanpulo">
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section class="bg-[#0A192F] rounded-lg">
+            <div class="gap-16 items-center py-8 px-4 mx-auto max-w-screen-xl lg:grid lg:grid-cols-2 lg:py-16 lg:px-6">
+                <div class="font-light text-gray-500 sm:text-lg dark:text-gray-400">
+                    <h2 class="mb-4 text-4xl tracking-tight font-bold text-gray-900 dark:text-white">Accommodations at Amanpulo</h2>
+                    <p class="mb-4">Amanpulo’s Casitas and Villas blend luxury with nature, offering breathtaking ocean or garden views. Inspired by traditional Filipino design, each Casita features open-air layouts and wooden decks, while Villas provide private pools, beach access, and personal butler service.</p>
+                    <p>Whether nestled in the treetops, along the hillside, or steps from the shore, every stay promises serenity and exclusivity in a tropical paradise.</p>
+                </div>
+                <div class="grid grid-cols-2 gap-4 mt-8">
+                    <img class="w-full rounded-lg" src="./assets/images/Amanpulo, Beach Pool Casita, View.webp" alt="office content 1">
+                    <img class="mt-4 w-full lg:mt-10 rounded-lg" src="./assets/images/Villas/Four B-Room.webp" alt="office content 2">
+                </div>
+            </div>
+        </section>
+
+        <section class="mt-16 p-10 mx-auto max-w-[1400px]">
+      
+            <div class="flex gap-12 justify-between max-md:flex-col max-md:items-center">
+              <!-- Casitas -->
+              <article
+                class="flex flex-col flex-1 items-center text-center bg-[#0A192F] p-8 rounded-2xl shadow-lg max-md:w-full max-md:max-w-[600px]">
+                <div class="overflow-hidden rounded-xl">
+                  <img src="./assets/images/Amanpulo Beach Pool Casita.webp" alt="Casitas"
+                    class="object-cover w-full rounded-xl h-[368px] max-sm:h-[250px] transition-transform duration-300 hover:scale-105" />
+                </div>
+                <h3 class="mt-6 text-4xl font-serif text-white max-sm:text-3xl">
+                  Casitas
+                </h3>
+                <p class="mt-4 text-lg text-white max-w-[580px]">
+                  Casitas are built into the verdant forest canopy, perched on the
+                  hillside, or set along the beach.
+                </p>
+                <a href="accomodation-f/casitas.html" class="mt-6 px-8 py-4 text-lg font-semibold text-white bg-[#001F3F]  rounded-full shadow-md hover:bg-[#112A46] transition transform hover:scale-105">
+                    View Casitas
+                </a>
+              </article>
+      
+              <!-- Villas -->
+              <article
+                class="flex flex-col flex-1 items-center text-center bg-[#0A192F] p-8 rounded-2xl shadow-lg max-md:w-full max-md:max-w-[600px]">
+                <div class="overflow-hidden rounded-xl">
+                  <img src="./assets/images/Villa.webp" alt="Villas"
+                    class="object-cover w-full rounded-xl h-[368px] max-sm:h-[250px] transition-transform duration-300 hover:scale-105" />
+                </div>
+                <h3 class="mt-6 text-4xl font-serif text-white max-sm:text-3xl">
+                  Villas
+                </h3>
+                <p class="mt-4 text-lg text-white max-w-[580px]">
+                  With its own beach frontage, every Villa offers up to four bedrooms, a
+                  private pool, and the services of a private chef and butler.
+                </p>
+                <a href="accomodation-f/villas.html" class="mt-6 px-8 py-4 text-lg font-semibold text-white bg-[#001F3F]  rounded-full shadow-md hover:bg-[#112A46] transition transform hover:scale-105">
+                    View Villas
+                </a>
+              </article>
+            </div>
+        </section>
+
+        <section class="mt-20 p-6 mx-auto max-w-[1200px] text-center">
+            <h2 class="text-3xl font-serif text-gray-900 mb-6 max-sm:text-2xl">
+              Amenities & Activities
+            </h2>
+            <p class="mx-auto text-lg text-gray-700 max-w-[1000px] max-sm:text-base">
+              Amanpulo offers world-class amenities and unforgettable experiences,
+              including luxurious beachfront and hillside villas, a tranquil spa,
+              and gourmet dining with breathtaking ocean views. Guests can enjoy a
+              range of activities, from snorkeling and scuba diving in crystal-clear
+              waters to paddleboarding, sailing, and windsurfing. Amanpulo promises
+              the perfect blend of adventure and relaxation in an exclusive tropical paradise.
+            </p>
+      
+        </section>
+
+        <section class="py-1 px-6 mb-22 mt-16">
+            
+            <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-6 ">
+                
+                <div class="dining-item">
+                    <div class="image-container relative overflow-hidden">
+                        <img class="h-auto w-full rounded-lg shadow-lg transition duration-300 ease-in-out hover:scale-105" 
+                            src="./assets/images/amanpulo_philippines_-_experience_floating_kawayan_bar_picnic4.webp" 
+                            alt="Casita">
+                        <div class="absolute inset-0 bg-black/10 backdrop-blur-md opacity-0 hover:opacity-100 transition duration-300 flex items-center justify-center">
+                            <h3 class="text-white text-2xl font-bold">Dinning</h3>
+                        </div>
+                    </div>
+                </div>
+                
+
+                <div class="dining-item">
+                    <div class="image-container relative overflow-hidden">
+                        <img class="h-auto w-full rounded-lg shadow-lg transition duration-300 ease-in-out hover:scale-105"
+                            src="./assets/images/Amanpulo-Gallery-7.webp" alt="Casita">
+
+                            <div class="absolute inset-0 bg-black/10 backdrop-blur-md opacity-0 hover:opacity-100 transition duration-300 flex items-center justify-center">
+                                <h3 class="text-white text-2xl font-bold">Wellness</h3>
+                            </div>
+                    </div>
+                </div>
+
+                <div class="dining-item">
+                    <div class="image-container relative overflow-hidden">
+                        <img class="h-auto w-full rounded-lg shadow-lg transition duration-300 ease-in-out hover:scale-105"
+                            src="./assets/images/amanpulo_philippines_-_private_dining_event_on_beachfront.webp" alt="Casita">
+                            
+                            <div class="absolute inset-0 bg-black/10 backdrop-blur-md opacity-0 hover:opacity-100 transition duration-300 flex items-center justify-center">
+                                <h3 class="text-white text-2xl font-bold">Celebrations</h3>
+                            </div>
+                    </div>
+                </div>
+
+                <div class="dining-item">
+                    <div class="image-container relative overflow-hidden">
+                        <img class="h-auto w-full rounded-lg shadow-lg transition duration-300 ease-in-out hover:scale-105"
+                            src="./assets/images/kawayan bar.webp" alt="Casita">
+
+                            <div class="absolute inset-0 bg-black/10 backdrop-blur-md opacity-0 hover:opacity-100 transition duration-300 flex items-center justify-center">
+                                <h3 class="text-white text-2xl font-bold">Exclusive Offers</h3>
+                            </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <div class="mt-5 mb-22 w-48 mx-auto border-t-2 border-yellow-900"></div>
+
+        <section class="py-1 px-6 mb-22 mt-5">
+            
+            <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-6 ">
+                
+                <div class="dining-item">
+                    <div class="image-container relative overflow-hidden">
+                        <img class="h-auto w-full rounded-lg shadow-lg transition duration-300 ease-in-out hover:scale-105" 
+                            src="./assets/images/Amanpulo-Gallery-47.webp" 
+                            alt="Casita">
+                        <div class="absolute inset-0 bg-black/10 backdrop-blur-md opacity-0 hover:opacity-100 transition duration-300 flex items-center justify-center">
+                            <h3 class="text-white text-2xl font-bold">Scuba Diving</h3>
+                        </div>
+                    </div>
+                </div>
+                
+
+                <div class="dining-item">
+                    <div class="image-container relative overflow-hidden">
+                        <img class="h-auto w-full rounded-lg shadow-lg transition duration-300 ease-in-out hover:scale-105"
+                            src="./assets/images/Amanpulo_Experiences-Surf_2.webp" alt="Casita">
+
+                            <div class="absolute inset-0 bg-black/10 backdrop-blur-md opacity-0 hover:opacity-100 transition duration-300 flex items-center justify-center">
+                                <h3 class="text-white text-2xl font-bold">Kite & Surf</h3>
+                            </div>
+                    </div>
+                </div>
+
+                <div class="dining-item">
+                    <div class="image-container relative overflow-hidden">
+                        <img class="h-auto w-full rounded-lg shadow-lg transition duration-300 ease-in-out hover:scale-105"
+                            src="./assets/images/Amanpulo_Experiences-Cruise_3.webp" alt="Casita">
+                            
+                            <div class="absolute inset-0 bg-black/10 backdrop-blur-md opacity-0 hover:opacity-100 transition duration-300 flex items-center justify-center">
+                                <h3 class="text-white text-2xl font-bold">Cruises</h3>
+                            </div>
+                    </div>
+                </div>
+
+                <div class="dining-item">
+                    <div class="image-container relative overflow-hidden">
+                        <img class="h-auto w-full rounded-lg shadow-lg transition duration-300 ease-in-out hover:scale-105"
+                            src="./assets/images/Amanpulo, Sea Pearl Journey Harvest.webp" alt="Casita">
+
+                            <div class="absolute inset-0 bg-black/10 backdrop-blur-md opacity-0 hover:opacity-100 transition duration-300 flex items-center justify-center">
+                                <h3 class="text-white text-2xl font-bold text-center">Golden South Sea Pearl Journey</h3>
+                            </div>
+                    </div>
+                </div>
+                
+            </div>
+        </section>
+
+        <section class="mt-16 px-24 py-16 text-center bg-[#0A192F] max-md:px-5 max-md:py-10 font-serif">
+            <div class="mx-auto my-0 max-w-[1440px]">
+              <h2 class="mb-6 text-5xl text-white max-sm:text-3xl font-ovo">
+                Book Your Exclusive Island Escape
+              </h2>
+              <p class="mx-auto my-0 text-xl leading-relaxed text-white max-w-[1024px] max-sm:text-lg">
+                Experience unparalleled luxury at Amanpulo. Book your stay effortlessly and indulge in a private island
+                retreat with world-class service, stunning villas, and breathtaking natural beauty. Secure your escape to
+                paradise today.
+              </p>
+              <div
+                class="grid grid-cols-4 gap-6 p-12 mx-auto my-10 bg-white max-md:grid-cols-2 max-sm:grid-cols-1 max-md:p-6 max-sm:p-4 rounded-lg shadow-lg">
+                <img src="./assets/images/Amanpulo-Gallery-30.webp" class="object-cover h-[320px] w-full rounded-lg shadow-md"
+                  alt="Luxury resort coconut drink" />
+                <img src="./assets/images/Amanpulo-Gallery-21.webp" class="object-cover h-[320px] w-full rounded-lg shadow-md"
+                  alt="Resort pathway" />
+                <img src="./assets/images/Amanpulo-Gallery-16.webp" class="object-cover h-[320px] w-full rounded-lg shadow-md"
+                  alt="Sunset view" />
+                <img src="./assets/images/Amanpulo-Gallery-29.webp" class="object-cover h-[320px] w-full rounded-lg shadow-md"
+                  alt="Dining area" />
+              </div>
+              <a href="booking.html"
+                class="px-16 py-4 text-3xl text-gray-900 bg-white rounded-full cursor-pointer max-sm:px-12 max-sm:py-3 max-sm:text-2xl font-ovo shadow-md hover:bg-yellow-200 transition-all">
+                Book Now
+            </a>
+            </div>
+        </section>
+        
+        <section class="bg-white py-20">
+          <div class="relative max-w-screen-xl mx-auto px-6 lg:px-12">
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
+              <!-- Text Content -->
+              <div>
+                <p class="text-base font-semibold text-gray-600">Contact Section</p>
+                <h2 class="mt-2 text-4xl font-serif font-normal text-gray-900 leading-tight">
+                  Getting Here
+                </h2>
+                <p class="mt-4 text-lg text-gray-700 mb-4">
+                  A complimentary car transfer from Manila airport to Amanpulo's private lounge and hangar is available for same-day flight connections.
+                  From Manila International Airport (MNL), guests fly directly to Pamalican Island in a 14-seat, twin-engine turboprop,
+                  landing at Amanpulo's private airstrip. Flight time is 70 minutes each way.
+                </p>
+                
+                <button id="openMapBtn" class="md:block px-6 py-2 text-white bg-[#001F3F] rounded-full shadow-lg hover:bg-[#0A192F] transition transform hover:scale-105">
+                  Open Map
+                </button>
+              </div>
+        
+              <!-- Image -->
+              <div class="flex justify-center">
+                <img class="w-full max-w-lg rounded-xl shadow-xl" src="./assets/images/Amanpulo-Gallery-18.webp" alt="Scuba Diving at Amanpulo">
+              </div>
+            </div>
+          </div>
+        </section>
+        
+        <!-- Map Modal -->
+        <div id="mapModal" class="fixed inset-0 items-center justify-center bg-black/30 bg-opacity-20 z-50 hidden">
+          <div class="bg-white p-6 rounded-lg shadow-lg w-[80%] md:w-[60%] lg:w-[50%] h-[60vh] relative">
+              <!-- Close Button -->
+              <button id="closeMapBtn" class="absolute top-3 right-3 text-gray-500 hover:text-gray-700 text-2xl">&times;</button>
+              
+              <!-- Map Container -->
+              <div id="map" class="w-full h-full rounded-md"></div>
+          </div>
+        </div>
+
+      
+
+        <section id="contact" class="bg-gray-900 dark:bg-gray-900 px-35 md:px-16 lg:px-24 py-16 rounded-lg shadow-md mt-10 max-w-7xl mx-auto">
+          <header class="mb-8 text-left">
+            <h2 class="text-3xl font-normal font-serif text-white">Contact Us</h2>
+            <p class="mt-3 text-lg text-white">
+              No request is too great and no detail too small. We are also here to assist you before your trip at Amanpulo begins.
+            </p>
+          </header>
+        
+          <div class="mt-12 mb-12 w-48 mx-auto border-t-2 border-white"></div>
+        
+          <div class="mt-6 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-6">
+            <div>
+              <label for="first-name" class="block text-sm font-medium text-white">First Name</label>
+              <input type="text" id="first-name" autocomplete="given-name"
+                class="mt-2 w-full rounded-lg border bg-white border-gray-300 px-3 py-2 text-gray-900 focus:border-indigo-600 focus:ring-2 focus:ring-indigo-600">
+            </div>
+        
+            <div>
+              <label for="last-name" class="block text-sm font-medium text-white">Last Name</label>
+              <input type="text" id="last-name" autocomplete="family-name"
+                class="mt-2 w-full rounded-lg border bg-white border-gray-300 px-3 py-2 text-gray-900 focus:border-indigo-600 focus:ring-2 focus:ring-indigo-600">
+            </div>
+        
+            <div>
+              <label for="email" class="block text-sm font-medium text-white">Email Address</label>
+              <input type="email" id="email" autocomplete="email"
+                class="mt-2 w-full rounded-lg border bg-white border-gray-300 px-3 py-2 text-gray-900 focus:border-indigo-600 focus:ring-2 focus:ring-indigo-600">
+            </div>
+        
+            <div>
+              <label for="country" class="block text-sm font-medium text-white">Country</label>
+              <select id="country" autocomplete="country-name"
+                class="mt-2 w-full rounded-lg border bg-white border-gray-300 px-3 py-2 text-gray-900 focus:border-indigo-600 focus:ring-2 focus:ring-indigo-600">
+                <option>Philippines</option>
+                <option>Canada</option>
+                <option>Mexico</option>
+              </select>
+            </div>
+        
+            <div>
+              <label for="street-address" class="block text-sm font-medium text-white">Street Address</label>
+              <input type="text" id="street-address" autocomplete="street-address"
+                class="mt-2 w-full rounded-lg border bg-white border-gray-300 px-3 py-2 text-gray-900 focus:border-indigo-600 focus:ring-2 focus:ring-indigo-600">
+            </div>
+        
+            <div>
+              <label for="city" class="block text-sm font-medium text-white">City</label>
+              <input type="text" id="city" autocomplete="address-level2"
+                class="mt-2 w-full rounded-lg border bg-white border-gray-300 px-3 py-2 text-gray-900 focus:border-indigo-600 focus:ring-2 focus:ring-indigo-600">
+            </div>
+        
+            <div>
+              <label for="region" class="block text-sm font-medium text-white">State / Province</label>
+              <input type="text" id="region" autocomplete="address-level1"
+                class="mt-2 w-full rounded-lg border bg-white border-gray-300 px-3 py-2 text-gray-900 focus:border-indigo-600 focus:ring-2 focus:ring-indigo-600">
+            </div>
+        
+            <div>
+              <label for="postal-code" class="block text-sm font-medium text-white">ZIP / Postal Code</label>
+              <input type="text" id="postal-code" autocomplete="postal-code"
+                class="mt-2 w-full rounded-lg border bg-white border-gray-300 px-3 py-2 text-gray-900 focus:border-indigo-600 focus:ring-2 focus:ring-indigo-600">
+            </div>
+          </div>
+        
+          <div class="mt-6">
+            <label for="message" class="block text-sm font-medium text-white">Message</label>
+            <textarea id="message" rows="4"
+              class="mt-2 w-full rounded-lg border bg-white border-gray-300 px-3 py-2 text-gray-900 focus:border-indigo-600 focus:ring-2 focus:ring-indigo-600"
+              placeholder="Write your message here..."></textarea>
+          </div>
+        
+          <div class="mt-6 flex justify-end max-sm:flex-col max-sm:items-center">
+            <button type="submit"
+              class="px-6 py-2 bg-indigo-600 text-white rounded-lg shadow-md hover:bg-indigo-700 focus:ring-2 focus:ring-indigo-600 w-full sm:w-auto">
+              Send
+            </button>
+          </div>
+        </section>
+        
+  </main>
+  
+  <footer class="bg-[#0A192F]">
+    <div class="mx-auto w-full max-w-screen-xl p-6 lg:py-10">
+      <div class="md:flex md:justify-between">
+        <!-- Logo Section -->
+        <div class="mb-6 md:mb-0 flex items-center">
+          <a href="#" class="flex items-center">
+            <img src="./assets/images/logo 1.webp" class="h-10 me-3" alt="Amanpulo Logo" />
+          </a>
+        </div>
+
+        <!-- Quick Links -->
+        <div class="grid grid-cols-2 gap-8 sm:gap-6 sm:grid-cols-3 p-6">
+          <div>
+            <h2 class="mb-4 text-sm font-semibold text-gray-900 uppercase dark:text-white">Quick Links</h2>
+            <ul class="text-gray-600 dark:text-gray-400 font-medium space-y-2">
+              <li><a href="index.html" class="hover:text-gray-900 dark:hover:text-gray-200">Home</a></li>
+              <li><a href="accommodation.html" class="hover:text-gray-900 dark:hover:text-gray-200">Accommodations</a></li>
+              <li><a href="amenities-activities.html" class="hover:text-gray-900 dark:hover:text-gray-200">Ameneties & Activities</a></li>
+              <li><a href="booking.html" class="hover:text-gray-900 dark:hover:text-gray-200">Booking</a></li>
+            </ul>
+          </div>
+        </div>
+
+        <!-- Contact Information -->
+        <div class="p-6">
+          <h2 class="mb-4 text-sm font-semibold text-gray-900 uppercase dark:text-white">Contact Us</h2>
+          <ul class="text-gray-600 dark:text-gray-400 font-medium space-y-2">
+            <li>Pamalican Island, Cuyo Archipelago, Palawan, Philippines</li>
+            <li>+63 2 7979 1777</li>
+            <li>reservations@amanpulo.com</li>
+          </ul>
+        </div>
+
+        <!-- Newsletter Subscription -->
+        <div class="p-6">
+          <h2 class="mb-4 text-sm font-semibold text-gray-900 uppercase dark:text-white">Newsletter</h2>
+          <p class="text-gray-600 dark:text-gray-400 font-medium">Subscribe to receive special offers and updates.</p>
+          <form class="mt-4">
+            <input type="email" placeholder="Enter your email" class="w-full p-2 rounded-lg border border-gray-300 dark:text-white">
+            <button type="submit"
+              class="mt-2 px-4 py-2 bg-[#001F3F] text-white rounded-lg hover:bg-[#0A192F]">Subscribe</button>
+          </form>
+        </div>
+      </div>
+
+      <!-- Divider -->
+      <hr class="my-6 border-gray-300 dark:border-gray-700 lg:my-8" />
+
+      <!-- Footer Bottom -->
+      <div class="sm:flex sm:items-center sm:justify-between">
+        <span class="text-sm text-gray-500 dark:text-gray-400">
+          © 2025 Amanpulo. All rights reserved.
+        </span>
+        <div class="flex space-x-6">
+          <a href="#" class="text-sm text-gray-500 dark:text-gray-400 hover:underline">Privacy Policy</a>
+          <a href="#" class="text-sm text-gray-500 dark:text-gray-400 hover:underline">Terms of Service</a>
+          <a href="#" class="text-sm text-gray-500 dark:text-gray-400 hover:underline">Sitemap</a>
+        </div>
+      </div>
+    </div>
+  </footer>
+
+
+  <script>
+    document.addEventListener("DOMContentLoaded", function () {
+    const openBtn = document.getElementById("openMapBtn");
+    const closeBtn = document.getElementById("closeMapBtn");
+    const modal = document.getElementById("mapModal");
+
+    let mapInitialized = false;
+
+    // Open Modal
+    openBtn.addEventListener("click", function () {
+        modal.classList.remove("hidden"); 
+        modal.classList.add("flex"); // Dynamically add flex
+
+        if (!mapInitialized) {
+            setTimeout(() => {
+                var map = L.map("map").setView([11.3366, 120.7226], 7);
+                L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
+                    attribution: "&copy; OpenStreetMap contributors"
+                }).addTo(map);
+
+                L.marker([11.3366, 120.7226]).addTo(map)
+                  .bindPopup("Amanpulo, Pamalican Island")
+                  .openPopup();
+
+                mapInitialized = true;
+            }, 200);
+        }
+    });
+
+    // Close Modal
+    closeBtn.addEventListener("click", function () {
+        modal.classList.add("hidden");
+        modal.classList.remove("flex");
+    });
+
+    // Close modal when clicking outside
+    modal.addEventListener("click", function (event) {
+        if (event.target === modal) {
+            modal.classList.add("hidden");
+            modal.classList.remove("flex");
+        }
+    });
+});
+
+
+  </script>
+
+  <script>
+    const menuBtn = document.getElementById("menu-btn");
+    const mobileMenu = document.getElementById("mobile-menu");
+
+    // Toggle menu visibility
+    menuBtn.addEventListener("click", () => {
+        mobileMenu.classList.toggle("hidden");
+    });
+
+    // Close menu when clicking a link
+    document.querySelectorAll("#mobile-menu a").forEach(link => {
+        link.addEventListener("click", () => {
+            mobileMenu.classList.add("hidden");
+        });
+    });
+  </script>
+
+  <script>
+    const API_KEY = "08290076f7d942da842135745251503"; // Replace with your API key
+    const CITY = "Palawan";
+
+    async function getWeather() {
+        try {
+            const response = await fetch(
+                `https://api.weatherapi.com/v1/current.json?key=${API_KEY}&q=${CITY}`
+            );
+
+            if (!response.ok) {
+                throw new Error(`HTTP error! Status: ${response.status}`);
+            }
+
+            const data = await response.json();
+
+            const temp = data.current.temp_c;
+            const weather = data.current.condition.text;
+            const city = data.location.name;
+
+            document.getElementById("weather-data").innerHTML = `
+                <p class="text-lg font-medium">${city}: ${temp}°C, ${weather}</p>
+            `;
+        } catch (error) {
+            console.error("Error fetching weather data:", error);
+            document.getElementById("weather-data").innerHTML = `<p>⚠️ Unable to fetch weather data.</p>`;
+        }
+    }
+
+    // Toggle Weather Dropdown
+    document.getElementById("weather-btn").addEventListener("click", () => {
+        const dropdown = document.getElementById("weather-dropdown");
+        dropdown.classList.toggle("hidden");
+
+        if (!dropdown.classList.contains("hidden")) {
+            getWeather();
+        }
+    });
+
+    // Close Dropdown When Clicking Outside
+    document.addEventListener("click", (event) => {
+        const dropdown = document.getElementById("weather-dropdown");
+        const button = document.getElementById("weather-btn");
+
+        if (!button.contains(event.target) && !dropdown.contains(event.target)) {
+            dropdown.classList.add("hidden");
+        }
+    });
+
+    // Mobile Menu Toggle
+    document.getElementById("menu-toggle").addEventListener("click", () => {
+        document.getElementById("menu").classList.toggle("hidden");
+    });
+  </script>
+</body>
+</html>

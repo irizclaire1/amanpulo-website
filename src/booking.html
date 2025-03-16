@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Amanpulo Luxury Resort | Book Your Stay</title>
+  <link href="output.css" rel="stylesheet">
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@300;400;500;600&family=Montserrat:wght@300;400;500&display=swap');
+    
+    body {
+      font-family: 'Montserrat', sans-serif;
+      background-color: #f8f5f0;
+    }
+    
+    h1, h2, h3, h4 {
+      font-family: 'Cormorant Garamond', serif;
+    }
+    
+    .hero-bg {
+      background-image: url('./assets/images/Amanpulo-Gallery-7.webp');
+      background-size: cover;
+      background-position: center;
+      position: relative;
+    }
+    
+    .hero-bg::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background: rgba(0, 0, 0, 0.4);
+    }
+    
+    .gold-text { color: #b8925d; }
+    .gold-bg { background-color: #b8925d; }
+    .gold-border { border-color: #b8925d; }
+    .hover-gold:hover { background-color: #b8925d; color: white; }
+    
+    .luxury-btn {
+      border: 2px solid #b8925d;
+      padding: 12px 24px;
+      text-transform: uppercase;
+      transition: all 0.3s ease-in-out;
+    }
+    
+    .luxury-btn:hover {
+      background: #b8925d;
+      color: white;
+    }
+  </style>
+</head>
+<body class="min-h-screen flex flex-col">
+  <main class="flex-grow flex flex-col md:flex-row">
+    <div class="w-full md:w-1/2 hero-bg flex flex-col items-center justify-center text-white text-center p-8 relative z-10">
+        <a href="index.html" class="luxury-btn absolute top-6 left-6">Go Back</a>
+      <div>
+        <h1 class="text-6xl font-light mb-6">AMANPULO</h1>
+        <p class="text-xl font-light max-w-lg mb-8">Experience unparalleled luxury at our secluded island retreat in the heart of the Sulu Sea.</p>
+      </div>
+    </div>
+
+    <div class="w-full md:w-1/2 bg-white p-12 lg:p-16 flex items-center">
+      <div class="w-full max-w-lg mx-auto">
+        <h3 class="text-4xl font-light mb-6">Reserve Your Stay</h3>
+        <div class="w-16 h-1 bg-gold mb-8"></div>
+        
+        <form id="reservation-form">
+            <label class="block text-sm gold-text mb-2">Check-in Date</label>
+            <input type="date" id="checkin" class="w-full p-3 border border-gray-300 rounded-md mb-6">
+          
+            <label class="block text-sm gold-text mb-2">Check-out Date</label>
+            <input type="date" id="checkout" class="w-full p-3 border border-gray-300 rounded-md mb-6">
+          
+            <label class="block text-sm gold-text mb-2">Adults</label>
+            <input type="number" id="adults" min="1" placeholder="Enter number of adults" class="w-full p-3 border border-gray-300 rounded-md mb-6">
+          
+            <label class="block text-sm gold-text mb-2">Children</label>
+            <input type="number" id="children" min="0" placeholder="Enter number of children" class="w-full p-3 border border-gray-300 rounded-md mb-6">
+          
+            <label class="block text-sm gold-text mb-2">Accommodation</label>
+            <select id="accommodation" class="w-full p-3 border border-gray-300 rounded-md mb-6">
+              <option value="">Select Accommodation</option>
+              <option>Four-Bedroom Lagoon Villa</option>
+              <option>Four-Bedroom Palawan Villa</option>
+              <option>Three-Bedroom Villa</option>
+              <option>Two-Bedroom Villa</option>
+              <option>One-Bedroom Villa</option>
+              <option>Beach Pool Casita</option>
+              <option>Beach Casita</option>
+              <option>Treetop Pool Casita</option>
+              <option>Treetop Casita</option>
+              <option>Deluxe Hillside Casita</option>
+              <option>Hillside Casita</option>
+            </select>
+          
+            <label class="block text-sm gold-text mb-2">Special Requests</label>
+            <textarea id="special-requests" class="w-full p-3 border border-gray-300 rounded-md mb-6" rows="3"></textarea>
+          
+            <!-- Error Message -->
+            <p id="error-message" class="text-red-600 text-sm mb-4 hidden">Please fill out all required fields.</p>
+          
+            <button type="button" class="w-full luxury-btn" onclick="checkAvailability()">Check Availability</button>
+          </form>
+          
+          <!-- Modal -->
+          <div id="availability-modal" class="fixed inset-0 bg-black/20 flex justify-center items-center opacity-0 pointer-events-none transition-opacity duration-300 z-50">
+            <div class="bg-white rounded-2xl p-8 w-full max-w-md shadow-xl relative">
+              <button onclick="closeModal()" class="absolute top-4 right-4 text-gray-600 text-3xl hover:text-gray-800">&times;</button>
+              <h3 class="text-3xl font-medium text-gold mb-4 text-center">Available Rooms</h3>
+              <p class="text-gray-700 text-center">We have rooms available for your selected dates.</p>
+              <button class="mt-6 w-full luxury-btn gold-text hover-gold py-3 text-lg rounded-lg" onclick="proceedToBooking()">Proceed to Booking</button>
+
+              <p id="processing-message" class="text-center text-green-600 font-normal mt-4 hidden">
+                Booking is being processed. A confirmation email will be sent shortly.
+              </p>
+              
+            </div>
+          </div>
+
+        </form>
+      </div>
+
+    </div>
+
+  </main>
+
+
+  <script>
+    function checkAvailability() {
+      // Get form values
+      const checkin = document.getElementById("checkin").value;
+      const checkout = document.getElementById("checkout").value;
+      const adults = document.getElementById("adults").value;
+      const children = document.getElementById("children").value;
+      const accommodation = document.getElementById("accommodation").value;
+      const errorMessage = document.getElementById("error-message");
+  
+      // Validate all fields
+      if (!checkin || !checkout || !adults || !accommodation) {
+        errorMessage.classList.remove("hidden");
+        return;
+      }
+  
+      errorMessage.classList.add("hidden"); // Hide error message if validation passes
+  
+      // Show modal if all inputs are filled
+      const modal = document.getElementById("availability-modal");
+      modal.classList.remove("opacity-0", "pointer-events-none");
+  
+      // Clear form fields after showing modal
+      document.getElementById("reservation-form").reset();
+    }
+  
+    function closeModal() {
+      document.getElementById("availability-modal").classList.add("opacity-0", "pointer-events-none");
+    }
+  
+    function proceedToBooking() {
+      const processingMessage = document.getElementById("processing-message");
+  
+      // Show processing message
+      processingMessage.classList.remove("hidden");
+  
+      // Simulate a short processing delay before hiding the modal
+      setTimeout(() => {
+        document.getElementById("availability-modal").classList.add("opacity-0", "pointer-events-none");
+        processingMessage.classList.add("hidden"); // Reset for next use
+      }, 5000);
+    }
+  </script>
+  
+  
+  
+</body>
+</html>

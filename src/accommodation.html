@@ -1,0 +1,411 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Amanpulo - Accommodation</title>
+    <link href="output.css" rel="stylesheet">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap"
+        rel="stylesheet">
+
+    <style>
+        body,
+        p,
+        a,
+        button {
+            font-family: 'Poppins', sans-serif;
+        }
+
+        @layer utilities {
+            ::-webkit-scrollbar {
+                width: 10px;
+            }
+
+            ::-webkit-scrollbar-track {
+                background: #f5e8dc;
+                border-radius: 10px;
+            }
+
+            ::-webkit-scrollbar-thumb {
+                background: #001F3F;
+                border-radius: 10px;
+                border: 2px solid #f5e8dc;
+            }
+
+            ::-webkit-scrollbar-thumb:hover {
+                background: #021b37;
+            }
+
+            .animate-fadeIn {
+                animation: fadeIn 1.5s ease-in-out forwards;
+                opacity: 0;
+            }
+
+            @keyframes fadeIn {
+                0% {
+                    opacity: 0;
+                    transform: translateY(20px);
+                }
+
+                100% {
+                    opacity: 1;
+                    transform: translateY(0);
+                }
+            }
+
+            .accommodation-item {
+                position: relative;
+                overflow: hidden;
+                display: flex;
+                flex-direction: column;
+                align-items: center;
+                text-align: center;
+            }
+
+            .image-container {
+                position: relative;
+                overflow: hidden;
+                width: 100%;
+            }
+
+            .image-container img {
+                transition: transform 0.3s ease;
+                display: block;
+                width: 100%;
+                border-radius: 8px;
+            }
+
+            .image-container:hover img {
+                transform: scale(1.05);
+            }
+
+            .view-more {
+                position: absolute;
+                bottom: 50%;
+                left: 50%;
+                transform: translate(-50%, 50%);
+                opacity: 0;
+                background-color: rgba(0, 31, 63, 0.8);
+                color: white;
+                padding: 10px 20px;
+                border-radius: 8px;
+                font-weight: bold;
+                transition: opacity 0.3s ease, transform 0.3s ease;
+                text-align: center;
+                cursor: pointer;
+                pointer-events: auto;
+                border: none;
+            }
+
+            .image-container:hover .view-more {
+                opacity: 1;
+                transform: translate(-50%, 0%);
+            }
+
+            /* Modal Styling */
+            .modal {
+                display: flex;
+                justify-content: center;
+                align-items: center;
+                position: fixed;
+                top: 0;
+                left: 0;
+                width: 100%;
+                height: 100%;
+                background: rgba(0, 0, 0, 0.5);
+                z-index: 1000;
+                transition: opacity 0.3s ease-in-out;
+            }
+
+            .modal.hidden {
+                display: none;
+            }
+
+            .modal-content {
+                background: white;
+                padding: 24px;
+                border-radius: 12px;
+                max-width: 1000px;
+                text-align: left;
+                display: flex;
+                flex-direction: column;
+                box-shadow: 0px 6px 12px rgba(0, 0, 0, 0.2);
+                animation: fadeIn 0.4s ease-in-out;
+                position: relative;
+            }
+
+            /* Modal Body: Image + Text */
+            .modal-body {
+                display: flex;
+                gap: 24px;
+                align-items: center;
+            }
+
+            /* Close Button */
+            .close {
+                position: absolute;
+                top: 12px;
+                right: 16px;
+                font-size: 22px;
+                cursor: pointer;
+                font-weight: bold;
+            }
+
+            /* Carousel */
+            .carousel {
+                position: relative;
+                width: 100%;
+                border-radius: 10px;
+                overflow: hidden;
+            }
+
+            .carousel-images {
+                position: relative;
+                width: 100%;
+                height: 380px; /* Increased height */
+            }
+
+            .carousel-slide {
+                position: absolute;
+                width: 100%;
+                height: 100%;
+                object-fit: cover; /* Ensure images fill the container */
+                opacity: 0;
+                transition: opacity 0.5s ease-in-out;
+                border-radius: 10px;
+            }
+
+            .carousel-slide.active {
+                opacity: 1;
+            }
+
+            /* Circle Indicators */
+            .carousel-indicators {
+                display: flex;
+                justify-content: center;
+                margin-top: 12px;
+            }
+
+            .indicator {
+                width: 10px;
+                height: 10px;
+                margin: 6px;
+                background: #bbb;
+                border-radius: 50%;
+                cursor: pointer;
+                transition: background 0.3s ease-in-out;
+            }
+
+            .indicator.active {
+                background: #001F3F;
+            }
+
+            /* Fade-in Animation */
+            @keyframes fadeIn {
+                from {
+                    opacity: 0;
+                    transform: translateY(-10px);
+                }
+                to {
+                    opacity: 1;
+                    transform: translateY(0);
+                }
+            }
+
+            /* Responsive */
+            @media (max-width: 768px) {
+                .modal-body {
+                    flex-direction: column;
+                    text-align: center;
+                }
+                .carousel {
+                    width: 100%;
+                }
+                .carousel-images {
+                    height: 300px; /* Adjust height for smaller screens */
+                }
+            }
+
+
+        }
+
+        
+    </style>
+</head>
+
+<body class="bg-[#0A192F]">
+
+    <main>
+        <!-- Background Image with Overlay -->
+        <div class="absolute inset-0">
+            <img src="../src/assets/images/Villa.webp" alt="Amanpulo Resort Beach View"
+                class="w-full h-full object-cover brightness-75">
+            <div class="absolute inset-0 bg-gradient-to-b from-[#001F3F]/60 via-[#0A192F]/40 to-transparent"></div>
+        </div>
+
+        <!-- Navigation Bar -->
+        <nav class="fixed top-0 w-full flex items-center justify-between px-6 md:px-12 py-5 bg-[#0A192F]/50 backdrop-blur-md shadow-lg z-50">
+            <!-- Logo -->
+            <a href="index.html">
+                <img src="./assets/images/logo 1.webp" alt="Amanpulo Logo" class="w-24 h-auto">
+            </a>
+
+            <!-- Desktop Menu -->
+            <ul id="mobile-menu" class="hidden md:flex flex-col md:flex-row gap-6 md:gap-8 text-lg font-medium text-white 
+                absolute md:static top-16 left-0 w-full md:w-auto bg-[#0A192F]/90 md:bg-transparent 
+                p-6 md:p-0 shadow-lg md:shadow-none">
+                <li><a href="index.html" class="hover:text-gray-300 transition">Home</a></li>
+                <li><a href="accommodation.html" class="text-blue-800 hover:text-gray-300 transition">Overview</a></li>
+                <li><a href="./accomodation-f/casitas.html" class="hover:text-gray-300 transition">Casitas</a></li>
+                <li><a href="./accomodation-f/villas.html" class="hover:text-gray-300 transition">Villas</a></li>
+                
+                <!-- Book Now (Only visible in mobile dropdown) -->
+                <li class="md:hidden mt-4">
+                    <a href="booking.html" class="block text-center px-6 py-2 bg-blue-900 rounded-lg hover:bg-blue-700 transition">
+                        Book Now
+                    </a>
+                </li>
+            </ul>
+
+            <!-- "Book Now" Button (Visible Only on Desktop) -->
+            <a href="booking.html"
+                class="hidden md:block px-6 py-2 text-white bg-[#001F3F] rounded-full shadow-lg hover:bg-[#0A192F] transition transform hover:scale-105">
+                Book Now
+            </a>
+
+            <!-- Mobile Menu Button -->
+            <button id="menu-btn" class="md:hidden text-white text-3xl focus:outline-none">
+                ☰
+            </button>
+        </nav>
+
+
+
+        <!-- Header Section -->
+        <header
+            class="relative flex flex-col items-center justify-center w-full h-screen bg-cover bg-center text-center text-white"
+            style="background-image: url('./assets/images/accommodation-banner.webp');">
+            <div class="bg-black/50 w-full h-full flex flex-col justify-center items-center px-6">
+                <h1 class="mt-4 text-6xl font-serif text-white drop-shadow-lg max-md:text-4xl">Luxurious Accommodations
+                </h1>
+                <p class="mt-4 text-lg max-w-2xl">Experience unparalleled comfort and breathtaking views in our
+                    exclusive villas and casitas.</p>
+            </div>
+        </header>
+
+        <!-- Accommodation Gallery -->
+        <section class="py-16 px-6">
+            <h2 class="text-4xl font-semibold text-center text-gray-900 dark:text-white">Explore Our Villas & Casitas
+            </h2>
+            <p class="text-base text-center text-gray-600 dark:text-gray-300 mt-4 max-w-3xl mx-auto">Set in the natural
+                seclusion of Pamalican Island's idyllic landscape, Amanpulo's Casitas and Villas are set on the
+                beachfront or ensconced within the forest canopy. The verdant landscape of age-old trees and dense
+                thicket cradles the spaces in complete privacy, providing plenty of opportunities to spend time together
+                with friends and family. The stillness is only accompanied by the gentle lapping of the waves and birds
+                singing in the treetops. The Amanpulo experience is for those who seek refuge in nature.</p>
+        </section>
+        <div class="w-48 mx-auto border-t-2 border-white"></div>
+
+        <section class="bg-[#0A192F]">
+            <div class="gap-16 items-center py-8 px-4 mx-auto max-w-screen-xl lg:grid lg:grid-cols-2 lg:py-16 lg:px-6">
+                <div class="font-light text-gray-500 sm:text-lg dark:text-gray-400">
+                    <h2 class="mb-4 text-4xl tracking-tight font-bold text-gray-900 dark:text-white">Amanpulo's Villas & Casitas</h2>
+                    <p class="mb-4">The Casitas, inspired by traditional Filipino bahay kubo, are nestled along the beach, hillside, or treetops, each featuring elegant interiors, wooden decks, and stunning ocean or garden views.</p>
+                    <p>For ultimate privacy and exclusivity, the Villas come with spacious living areas, private pools, direct beach access, and dedicated personal chefs and butlers. Designed for relaxation and seamless indoor-outdoor living, Amanpulo’s accommodations provide a tranquil retreat amidst breathtaking island scenery.</p>
+                </div>
+                <div class="grid grid-cols-2 gap-4 mt-8">
+                    <img class="w-full rounded-lg" src="./assets/images/Amanpulo, Beach Pool Casita, View.webp" alt="office content 1">
+                    <img class="mt-4 w-full lg:mt-10 rounded-lg" src="./assets/images/Villas/Four B-Room.webp" alt="office content 2">
+                </div>
+            </div>
+        </section>
+    </main>
+    <footer class="bg-white">
+        <div class="mx-auto w-full max-w-screen-xl p-6 lg:py-10">
+            <div class="md:flex md:justify-between">
+                <!-- Logo Section -->
+                <div class="mb-6 md:mb-0 flex items-center">
+                    <a href="#" class="flex items-center">
+                        <img src="./assets/images/logo - dark.webp" class="h-10 me-3" alt="Amanpulo Logo" />
+                    </a>
+                </div>
+
+                <!-- Quick Links -->
+                <div class="grid grid-cols-2 gap-8 sm:gap-6 sm:grid-cols-3 p-6">
+                    <div>
+                        <h2 class="mb-4 text-sm font-semibold text-gray-900 uppercase">Quick Links</h2>
+                        <ul class="text-gray-600 dark:text-gray-400 font-medium space-y-2">
+                            <li><a href="#" class="hover:text-gray-900">About Us</a></li>
+                            <li><a href="#" class="hover:text-gray-900">Accommodations</a></li>
+                            <li><a href="#" class="hover:text-gray-900">Ameneties & Activities</a></li>
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- Contact Information -->
+                <div class="p-6">
+                    <h2 class="mb-4 text-sm font-semibold text-gray-900 uppercase">Contact Us</h2>
+                    <ul class="text-gray-600 dark:text-gray-400 font-medium space-y-2">
+                        <li>Pamalican Island, Cuyo Archipelago, Palawan, Philippines</li>
+                        <li>+63 2 7979 1777</li>
+                        <li>reservations@amanpulo.com</li>
+                    </ul>
+                </div>
+
+                <!-- Newsletter Subscription -->
+                <div class="p-6">
+                    <h2 class="mb-4 text-sm font-semibold text-gray-900 uppercase">Newsletter</h2>
+                    <p class="text-gray-600 dark:text-gray-400 font-medium">Subscribe to receive special offers and
+                        updates.</p>
+                    <form class="mt-4">
+                        <input type="email" placeholder="Enter your email"
+                            class="w-full p-2 rounded-lg border border-gray-300">
+                        <button type="submit"
+                            class="mt-2 px-4 py-2 bg-[#001F3F] text-white rounded-lg hover:bg-[#0A192F]">Subscribe</button>
+                    </form>
+                </div>
+            </div>
+
+            <!-- Divider -->
+            <hr class="my-6 border-gray-300 dark:border-gray-700 lg:my-8" />
+
+            <!-- Footer Bottom -->
+            <div class="sm:flex sm:items-center sm:justify-between">
+                <span class="text-sm text-gray-500 dark:text-gray-400">
+                    © 2025 Amanpulo. All rights reserved.
+                </span>
+                <div class="flex space-x-6">
+                    <a href="#" class="text-sm text-gray-500 dark:text-gray-400 hover:underline">Privacy Policy</a>
+                    <a href="#" class="text-sm text-gray-500 dark:text-gray-400 hover:underline">Terms of Service</a>
+                    <a href="#" class="text-sm text-gray-500 dark:text-gray-400 hover:underline">Sitemap</a>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    
+
+    <script>
+        const menuBtn = document.getElementById("menu-btn");
+        const mobileMenu = document.getElementById("mobile-menu");
+    
+        // Toggle menu visibility
+        menuBtn.addEventListener("click", () => {
+            mobileMenu.classList.toggle("hidden");
+        });
+    
+        // Close menu when clicking a link
+        document.querySelectorAll("#mobile-menu a").forEach(link => {
+            link.addEventListener("click", () => {
+                mobileMenu.classList.add("hidden");
+            });
+        });
+    </script>
+
+
+</body>
+
+</html>
